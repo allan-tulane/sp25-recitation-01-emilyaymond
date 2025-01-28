@@ -35,9 +35,15 @@ def _binary_search(mylist, key, left, right):
 	### TODO
 
 	###
-
-
-
+	if left > right:
+		return -1
+	middle = (left + right) // 2
+	if mylist[middle] == key:
+		return middle
+	elif mylist[middle] > key:
+		return _binary_search(mylist, key, left, middle - 1)
+	else:
+		return _binary_search(mylist, key, middle + 1, right)
 
 def time_search(search_fn, mylist, key):
 	"""
@@ -58,7 +64,10 @@ def time_search(search_fn, mylist, key):
 	  search function on this input.
 	"""
 	### TODO
-
+	start = time.time()
+	search_fn(mylist, key)
+	end = time.time()
+	return (end - start) * 1000
 	###
 
 def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
@@ -77,7 +86,15 @@ def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	  for each method to run on each value of n
 	"""
 	### TODO
-
+	linear_times = []
+	binary_times = []
+	for size in sizes:
+		size = int(size)
+		mylist = list(range(size))
+		linear_times.append(time_search(linear_search, mylist, -1))
+		binary_times.append(time_search(binary_search, mylist, -1))
+	return [(size, linear_times[i], binary_times[i]) for i, size in enumerate(sizes)]
+		
 	###
 
 def print_results(results):
@@ -86,4 +103,6 @@ def print_results(results):
 							headers=['n', 'linear', 'binary'],
 							floatfmt=".3f",
 							tablefmt="github"))
+
+print_results(compare_search())
 
